@@ -1,0 +1,39 @@
+.formContainer{
+    position: relative;
+
+}
+
+.buttonContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 80%;
+}
+
+
+
+#submitButton{ 
+    background-color:cadetblue;
+    border-radius: 5px;
+    padding: 1rem;
+    margin: 1rem;
+    width: 90%;
+}
+
+#submitButton:hover{
+    cursor: pointer;
+}
+
+span{
+    padding: 1rem;
+    position: absolute;
+    left: 3px;
+    top: 1px;
+    font-weight: bold;
+}
+
+.roster{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

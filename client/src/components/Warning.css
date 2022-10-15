@@ -1,0 +1,13 @@
+.warning {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 2rem;
+    font-size: 0.75rem;
+    margin-top: 0.35rem;
+    background-color: #ff0000;
+    color: white;
+    border-radius: 5px;
+    padding: 0.15rem;
+}

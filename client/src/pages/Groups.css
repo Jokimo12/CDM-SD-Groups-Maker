@@ -1,0 +1,43 @@
+.groups{
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 2rem;
+}
+
+.groupsContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100vw;
+    height: 60vh;
+}
+
+.groupsButtonsContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.groupModalButtons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: space-between;
+}
+
+.namesModalButtons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    border: 3px solid black;
+}
+
+.controlModalButtons{
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.namesContainer{
+    padding: 3rem;
+}

@@ -1,0 +1,56 @@
+body{
+    margin: 0;
+}
+
+.navbar{
+    background-color: black;
+}
+
+ul{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: space-between;
+    list-style: none;
+    margin: 0;
+}
+
+#logo{
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#signOut{
+    padding: 1rem;
+    border-radius: 30px;
+    background-color: white;
+    color: black;
+}
+
+#signOut:hover{
+    background-color: lightgray;
+}
+
+li{
+    padding: 2.5rem 2rem 2.5rem 2rem;
+}
+
+.link{
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    padding: inherit;
+}
+
+.link:hover{
+    background-color: #BBE1FA;
+}
+
+.activeLink{
+    background-color: #3282B8;
+    padding: inherit
+}
+
+
+

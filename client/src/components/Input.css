@@ -1,0 +1,8 @@
+.input{
+    width: 80%;
+    height: 2.5rem;
+}
+
+.invalid{
+    box-shadow: 0 0 5px #ff0000;
+}
