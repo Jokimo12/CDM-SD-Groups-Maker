@@ -26,6 +26,11 @@
     align-items: center;
 }
 
+.description{
+    color: white;
+    font-size: 24px;
+}
+
 label{
     color:black;
 }

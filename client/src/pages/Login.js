@@ -54,6 +54,11 @@ export default function Login(props) {
     return(
         <div className='login'>
             <Title/>
+
+            <div className='description'>
+                A Fast Way to Build Groups in a Classroom 
+            </div>
+
             <div className='formContainer'>
                 <form className='form' onSubmit={login}>
                     <label>Email</label><br/>
