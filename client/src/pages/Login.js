@@ -72,7 +72,7 @@ export default function Login(props) {
                     
                     <Button link='/signup'>Sign Up</Button>
 
-                    <Button type='submit'>Log In</Button>
+                    <Button type='submit' disabled={!(email && password)}>Log In</Button>
                 </form> 
             </div>
         </div>

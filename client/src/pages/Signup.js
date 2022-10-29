@@ -45,6 +45,11 @@ export default function Signup(props) {
     return(
         <div className='signup'>
             <Title/>
+
+            <div className='description'>
+                A Fast Way to Build Groups in a Classroom 
+            </div>
+            
             <div className='formContainer'>
                  <form className='form' onSubmit={sendForm}>
                     <label>Email</label><br/>
@@ -54,7 +59,7 @@ export default function Signup(props) {
                     <label>Confirm Password</label><br/>
                     <Input required = {true} type='password' className='inputField' value={confPassword} onChange={(value) => setConfPassword(value)} validator = {passwordValidator} message = "passwords must match" /><br/>
 
-                    <Button type='submit'>Sign Up</Button>
+                    <Button type='submit' disabled={!(email && password && confPassword && password === confPassword)}>Sign Up</Button>
 
                     <Button link='/'>Back</Button>
                 </form> 

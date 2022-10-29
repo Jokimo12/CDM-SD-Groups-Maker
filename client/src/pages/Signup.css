@@ -9,6 +9,11 @@
     background-image: linear-gradient(45deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 0%, rgba(88,160,175,1) 50%);
 }
 
+.description{
+    color: white;
+    font-size: 24px;
+}
+
 .formContainer{
     background-color: white;
     border: 2px solid white;

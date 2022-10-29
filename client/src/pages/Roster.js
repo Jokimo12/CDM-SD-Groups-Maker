@@ -177,8 +177,8 @@ export default function Roster(props) {
                             <Button styles='spaced tight' onClick={clearForm}>
                                 Cancel
                             </Button>
-
-                            <input type='submit' value='Submit' className='button tight' />
+                            
+                            <input type='submit' value='Submit' className='button tight' disabled={!(first && last && grade && points)} />
                         </div>  
                     </form>  
                 </div>

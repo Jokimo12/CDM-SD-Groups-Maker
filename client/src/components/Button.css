@@ -48,6 +48,11 @@
     background-color: #BBE1FA;
 }
 
+.button:disabled{
+    background-color: gray;
+    cursor: auto;
+}
+
 .buttonLink{
     width: 80%;
     display: flex;
