@@ -3,6 +3,7 @@ import './Attendance.css';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import PropTypes from 'prop-types';
+import useGetStudents from '../hooks/useGetStudents';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,56 +17,37 @@ const columns = [
 export default function Attendance(props) {
     const navigate = useNavigate();
 
+    const {status, data} = useGetStudents(props.user);
+
     useEffect(() => {
-        async function getNames() {
-            try{
-                const response = await fetch("/getStudents", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        user: props.user
-                    })
-                })
-
-                const data = await response.json();
-                
-                props.setRows(data.students);
-            } catch(e) {
-                console.log(e);
-            }
-        }
-
         if(props.user === '') {
             navigate("/");
-        
-        } else if(!props.studentsFetched){
-            getNames();
-            props.setStudentsFetched(true);
-        }
+        } 
     }, []);
 
     return(
         <div>
-            <Navbar setUser={props.setUser} setStudentsFetched={props.setStudentsFetched} />
+            <Navbar setUser={props.setUser} />
             <div className='attendanceContainer'>
-                <Box sx={{ height: 400, width: '90%' }}>
+                {status === 'loading' && 'Loading!'}
+
+                {status === 'error' && 'Error!'}
+
+                {status === 'success' && <Box sx={{ height: 400, width: '90%' }}>
                     <DataGrid
-                        rows={props.rows}
+                        rows={data.students}
                         columns={columns}
                         pageSize={5}
                         rowsPerPageOptions={[5]}
                         disableSelectionOnClick
                         experimentalFeatures={{ newEditingApi: true }}
                     />
-                </Box>
+                </Box>}
             </div>
         </div>
     );
 }
 
 Attendance.propTypes = {
-    user: PropTypes.string.isRequired,
-    rows: PropTypes.array.isRequired,
-    studentsFetched: PropTypes.bool.isRequired,
-    setStudentsFetched: PropTypes.func.isRequired
+    user: PropTypes.string.isRequired
 }

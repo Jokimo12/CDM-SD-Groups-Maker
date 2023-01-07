@@ -8,6 +8,8 @@ import { Box } from '@mui/material';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import useGetStudents from '../hooks/useGetStudents';
+import useCreateStudent from '../hooks/useCreateStudent';
 
 const columns = [
     { field: 'firstName', headerName: 'First Name', width: 150 },
@@ -18,13 +20,32 @@ const columns = [
 
 export default function Roster(props) {
     const [isOpen, setIsOpen] = useState(false);
-    const [id, setID] = useState(props.rows.length);
     const [first, setFirst] = useState("");
     const [last, setLast] = useState(""); 
     const [grade, setGrade] = useState("");
     const [points, setPoints] = useState("");
 
     const navigate = useNavigate();
+
+    const{status, data} = useGetStudents(props.user);
+
+    console.log('data', data)
+
+    const studentInfo = {
+        firstName: first,
+        lastName: last,
+        grade: grade,
+        points: points,
+        user: props.user
+    };
+
+    const{mutate: createStudent} = useCreateStudent(studentInfo);
+
+    useEffect(() => {
+      if (status === 'success') {
+        //setID(data.students.length);
+      }
+    }, [status])
 
     const clearForm = () => {
         setIsOpen(false);
@@ -35,33 +56,11 @@ export default function Roster(props) {
     }
 
     const submit = async(event) => {
-        event.preventDefault();
-        try{
-            const response = await fetch("/newStudent", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    firstName: first,
-                    lastName: last,
-                    grade: grade,
-                    points: points,
-                    user: props.user
-                })
-            })
-            if(response.status === 200){
-                setID((prevID) => prevID+1);
-                props.setRows(prevRows => [...prevRows, {
-                    id: id, 
-                    firstName: first,
-                    lastName: last,
-                    grade: grade,
-                    points: points
-                }]);
-                clearForm();
-            }
-        } catch(e) {
-            console.log(e);
-        }
+        event.preventDefault();         
+        createStudent();
+        //setID((prevID) => prevID+1);
+        clearForm()
+    
     }
 
     const onFirstNameChange = (value) => {
@@ -120,43 +119,16 @@ export default function Roster(props) {
 
     //const {setRows} = props
 
-    useEffect(() => {
-        async function getNames() {
-            
-            try{
-                const response = await fetch("/getStudents", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        user: props.user
-                    })
-                })
-
-                const data = await response.json();
-
-                props.setRows(data.students);
-
-                setID(data.students.length);
-            } catch(e) {
-                console.log(e);
-            }
-        }
-        
+    useEffect(() => {        
         if(props.user === '') {
             navigate("/");
-            
-        } else if(!props.studentsFetched){
-            getNames();
-            props.setStudentsFetched(true);
         }
 
     }, []);
 
-    console.log('props.rows', props.rows)
-    console.log('id', id);
     return(
         <div>
-            <Navbar setUser={props.setUser} setStudentsFetched={props.setStudentsFetched} />
+            <Navbar setUser={props.setUser} />
 
             <Modal
                 open={isOpen}
@@ -191,25 +163,25 @@ export default function Roster(props) {
                     Add Member
                 </Button>
 
-                <Box sx={{ height: 400, width: '90%' }}>
+                {status === 'loading' && 'Loading!'}
+
+                {status === 'error' && 'Error!'}
+
+                {status === 'success' && <Box sx={{ height: 400, width: '90%' }}>
                     <DataGrid
-                        rows={props.rows}
+                        rows={data.students}
                         columns={columns}
                         pageSize={15}
                         rowsPerPageOptions={[55]}
                         disableSelectionOnClick
                         experimentalFeatures={{ newEditingApi: true }}
                     />
-                </Box>
+                </Box>}
             </div>
         </div>
     );
 }
 
 Roster.propTypes = {
-    user: PropTypes.string.isRequired,
-    rows: PropTypes.array.isRequired,
-    setRows: PropTypes.func.isRequired,
-    studentsFetched: PropTypes.bool.isRequired,
-    setStudentsFetched: PropTypes.func.isRequired
+    user: PropTypes.string.isRequired
 }

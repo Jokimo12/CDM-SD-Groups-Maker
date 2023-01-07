@@ -33,7 +33,6 @@ export default function Navbar(props) {
                 <li>
                     <NavLink to='/' className='link' id='signOut' onClick={() => {
                             props.setUser('');
-                            props.ssetStudentsFetched(false); 
                         }
                     }>
                         Sign Out
@@ -45,6 +44,5 @@ export default function Navbar(props) {
 }
 
 Navbar.propTypes = {
-    setUser: PropTypes.func.isRequired,
-    setStudentsFetched: PropTypes.func.isRequired
+    setUser: PropTypes.func.isRequired
 }

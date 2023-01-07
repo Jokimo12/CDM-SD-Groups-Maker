@@ -3,6 +3,7 @@ import Title from '../components/Title';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import PropTypes from 'prop-types';
+import useAuthenticateUser from '../hooks/useAthenticateUser';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,6 +11,8 @@ export default function Login(props) {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    
+    const { status, data, error } = useAuthenticateUser(email, password);
 
     let passwordProps = {
         required: true,
@@ -23,25 +26,14 @@ export default function Login(props) {
         event.preventDefault();
 
         try{
-            const response = await fetch("/checkUser", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            });
-
-            const data = await response.json();
-
-            if(response.status === 200){
+            if(status === 'success'){
                 if(data.auth){
                     props.setUser(email);
                     navigate("/roster");
                 } else {
                     passwordProps = {...passwordProps, message: 'Wrong Password'};
                 }
-            } else if(response.status === 500) {
+            } else if(status === 'error') {
                 setEmail('');
                 setPassword('');
             }

@@ -3,8 +3,9 @@ import Navbar from '../components/Navbar';
 import Modal from '../components/Modal';
 import Group from '../components/Group';
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
 import './Groups.css';
+import useGetStudents from '../hooks/useGetStudents';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Groups(props) {
@@ -15,6 +16,8 @@ export default function Groups(props) {
     const [selectedNames, setSelectedNames] = useState([]);
 
     const navigate = useNavigate();
+
+    const {status, data} = useGetStudents(props.user);
 
     const addGroup = () => {
         if(numGroups < 5){
@@ -72,10 +75,10 @@ export default function Groups(props) {
             newGroups[i] = {id: i+1, names:[]};
         }
 
-        for(let i = 0; i < props.rows.length; i++){
-            let randNum = getRandomInt(props.rows.length-1);
+        for(let i = 0; i < data.students.length; i++){
+            let randNum = getRandomInt(data.students.length-1);
             while(randomIndices.find(ele => ele === randNum)){
-                randNum = getRandomInt(props.rows.length-1);
+                randNum = getRandomInt(data.students.length-1);
             }
             randomIndices.push(randNum);
         }
@@ -83,7 +86,7 @@ export default function Groups(props) {
         let student;
         while(randomIndices.length > 0){
             for(let i = 0; i < groups.length; i++){
-                student = `${props.rows[randomIndices[randomIndices.length-1]].firstName} ${props.rows[randomIndices[randomIndices.length-1]].lastName}`;
+                student = `${data.students[randomIndices[randomIndices.length-1]].firstName} ${data.students[randomIndices[randomIndices.length-1]].lastName}`;
                 newGroups[i].names.push(student);
                 randomIndices.pop();
             }
@@ -95,7 +98,7 @@ export default function Groups(props) {
     const submitHandler = () => {
         setGroups((prevGroups) => {
             
-            prevGroups[selectedGroup-1].names = selectedNames.map(ele => `${props.rows[ele].firstName} ${props.rows[ele].lastName}`);
+            prevGroups[selectedGroup-1].names = selectedNames.map(ele => `${data.students[ele].firstName} ${data.students[ele].lastName}`);
             return prevGroups;
         });
 
@@ -106,36 +109,18 @@ export default function Groups(props) {
     }
 
     useEffect(() => {
-        async function getNames() {
-            try{
-                const response = await fetch("/getStudents", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        user: props.user
-                    })
-                })
-
-                const data = await response.json();
-                
-                props.setRows(data.students);
-            } catch(e) {
-                console.log(e);
-            }
-        }
-
         if(props.user === '') {
             navigate("/");
-        
-        } else if(!props.studentsFetched){
-            getNames();
-            props.setStudentsFetched(true);
         }
     }, []);
 
     return(
         <div>
-            <Navbar setUser={props.setUser} setStudentsFetched={props.setStudentsFetched} />
+            <Navbar setUser={props.setUser} />
+
+            {status === 'loading' && 'Loading!'}
+
+            {status === 'error' && 'Error!'}
 
             <Modal open={isOpen} onClose={() => setIsOpen(false)}>
                 <div className='namesContainer'>
@@ -144,7 +129,11 @@ export default function Groups(props) {
                     </div>
 
                     <div className='namesModalButtons'>
-                        {props.rows.map(namesMapFunc)}
+                        {status === 'loading' && 'Loading!'}
+
+                        {status === 'error' && 'Error!'}
+
+                        {status === 'success' && data.students.map(namesMapFunc)}
                     </div>
 
                     <div className='controlModalButtons'>
@@ -190,8 +179,5 @@ export default function Groups(props) {
 }
 
 Groups.propTypes = {
-    user: PropTypes.string.isRequired,
-    rows: PropTypes.array.isRequired,
-    studentsFetched: PropTypes.bool.isRequired,
-    setStudentsFetched: PropTypes.func.isRequired
+    user: PropTypes.string.isRequired
 }
